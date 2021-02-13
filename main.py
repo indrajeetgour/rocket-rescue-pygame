@@ -16,6 +16,7 @@ YELLOW = (255, 255, 0)
 BORDER = pygame.Rect(WIDTH // 2 - 5, 0, 10, HEIGHT)
 
 HEALTH_FONT = pygame.font.SysFont('comics-bold', 40)
+WINNER_FONT = pygame.font.SysFont('comics-bold', 100)
 
 FPS = 60
 SPACESHIP_WIDTH, SPACESHIP_HEIGHT = 40, 40
@@ -70,6 +71,7 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
+                pygame.quit()
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LCTRL and len(yellow_bullets) < MAX_BULLETS:
@@ -92,7 +94,8 @@ def main():
             winner_text = "Red Wins!!"
 
         if winner_text != "":
-            pass
+            draw_winner(winner_text)
+            break
 
         key_pressed = pygame.key.get_pressed()
         yellow_handle_movement(key_pressed, yellow)
@@ -102,7 +105,15 @@ def main():
 
         draw_window(red, yellow, red_bullets, yellow_bullets, red_health, yellow_health)
 
-    pygame.quit()
+    # pygame.quit()
+    main()
+
+
+def draw_winner(text):
+    draw_text = WINNER_FONT.render(text, 1, WHITE)
+    WIN.blit(draw_text, (WIDTH / 2 - draw_text.get_width() / 2, HEIGHT / 2 - draw_text.get_height() / 2))
+    pygame.display.update()
+    pygame.time.delay(5000)
 
 
 def draw_window(red, yellow, red_bullets, yellow_bullets, red_health, yellow_health):
@@ -112,7 +123,7 @@ def draw_window(red, yellow, red_bullets, yellow_bullets, red_health, yellow_hea
 
     red_health_text = HEALTH_FONT.render("Health: " + str(red_health), 1, WHITE)
     yellow_health_text = HEALTH_FONT.render("Health: " + str(yellow_health), 1, WHITE)
-    WIN.blit(red_health_text, (WIDTH, 10))
+    WIN.blit(red_health_text, (WIDTH - red_health_text.get_width() - 10, 10))
     WIN.blit(yellow_health_text, (10, 10))
 
     WIN.blit(RED_SPACESHIP, (red.x, red.y))
